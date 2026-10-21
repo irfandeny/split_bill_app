@@ -1,58 +1,264 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SplitTrip
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+SplitTrip adalah aplikasi web untuk mencatat dan membagi pengeluaran perjalanan bersama secara rapi. Buat satu trip, tambahkan anggota, catat siapa yang membayar, tentukan porsi setiap anggota, lalu gunakan logika ringkasan saldo untuk melihat posisi kontribusi tiap orang.
 
-## About Laravel
+> Dibangun dengan Laravel 13, Blade, Tailwind CSS, dan Alpine.js.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Autentikasi pengguna**
+  - Registrasi dan login
+  - Verifikasi email
+  - Lupa dan reset password
+  - Konfirmasi password serta pengelolaan profil
+- **Manajemen trip**
+  - Membuat, melihat, mengubah, dan menghapus trip
+  - Setiap trip hanya dapat dikelola oleh pembuatnya
+- **Manajemen anggota**
+  - Menambahkan anggota ke trip
+  - Menghapus anggota dari trip
+- **Pencatatan expense**
+  - Menyimpan judul, nominal, tanggal, dan catatan pengeluaran
+  - Mendukung lebih dari satu payer untuk satu expense
+  - Memilih participant dari anggota trip
+  - Tiga metode pembagian:
+    - **Equal** — dibagi rata
+    - **Custom amount** — nominal tiap orang ditentukan manual
+    - **Percentage** — porsi ditentukan dalam persentase
+  - Validasi agar total pembayaran payer dan total porsi participant selalu sesuai dengan nominal expense
+- **Perhitungan kontribusi**
+  - Menghitung total tanggungan setiap anggota
+  - Menghitung total kontribusi dari pembayaran expense
+  - Menghitung sisa yang masih harus dibayar atau diterima
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Teknologi
 
-## Learning Laravel
+### Backend
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP `^8.3`
+- Laravel `^13.17`
+- Laravel Breeze untuk autentikasi
+- Laravel Eloquent ORM
+- SQLite sebagai database bawaan
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Frontend
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- Blade templates
+- Tailwind CSS
+- Alpine.js
+- Vite
 
-## Agentic Development
+### Testing dan tooling
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- Pest PHP
+- Laravel Pint
+- Laravel Boost
+
+## Persyaratan sistem
+
+Pastikan perangkat sudah memiliki:
+
+- PHP 8.3 atau lebih baru
+- Composer
+- Node.js dan npm
+- Ekstensi PHP SQLite
+
+Untuk memeriksa instalasi:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php -v
+composer -V
+node -v
+npm -v
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Instalasi
 
-## Contributing
+### 1. Clone repository
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone https://github.com/irfandeny/split_bill_app.git
+cd split_bill_app
+```
 
-## Code of Conduct
+### 2. Install dependency PHP
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install
+```
 
-## Security Vulnerabilities
+### 3. Siapkan environment
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Linux/macOS:
 
-## License
+```bash
+cp .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+### 4. Siapkan database
+
+Project menggunakan SQLite secara default. Jika file database belum tersedia, buat file tersebut:
+
+Linux/macOS:
+
+```bash
+touch database/database.sqlite
+```
+
+Windows PowerShell:
+
+```powershell
+New-Item database/database.sqlite -ItemType File
+```
+
+Jalankan migrasi dan data awal:
+
+```bash
+php artisan migrate --seed
+```
+
+Konfigurasi database dapat diubah melalui `.env`. Untuk SQLite, pastikan konfigurasi berikut tersedia:
+
+```dotenv
+DB_CONNECTION=sqlite
+```
+
+### 5. Install dependency frontend dan build asset
+
+```bash
+npm install
+npm run build
+```
+
+## Menjalankan aplikasi
+
+Untuk development, jalankan server Laravel dan Vite di terminal terpisah:
+
+Terminal 1:
+
+```bash
+php artisan serve
+```
+
+Terminal 2:
+
+```bash
+npm run dev
+```
+
+Buka [http://localhost:8000](http://localhost:8000) di browser.
+
+## Alur penggunaan
+
+1. Daftar akun atau masuk ke akun yang sudah ada.
+2. Buat trip baru dari dashboard atau halaman **My Trips**.
+3. Tambahkan semua anggota yang ikut dalam trip.
+4. Tambahkan expense baru.
+5. Masukkan nominal yang dibayar oleh satu atau beberapa anggota.
+6. Pilih participant dan metode pembagian biaya.
+7. Simpan expense untuk memperbarui ringkasan kontribusi.
+
+### Aturan validasi expense
+
+- Minimal ada satu payer dan satu participant.
+- Total nominal seluruh payer harus sama dengan total expense.
+- Untuk pembagian custom, total seluruh nominal participant harus sama dengan total expense.
+- Untuk pembagian percentage, total persentase participant harus 100%.
+- Anggota yang dipilih sebagai payer atau participant harus terdaftar pada trip terkait.
+
+## Menjalankan test
+
+Jalankan seluruh test dengan:
+
+```bash
+php artisan test
+```
+
+Atau gunakan script Composer:
+
+```bash
+composer test
+```
+
+## Struktur direktori penting
+
+```text
+app/
+├── Http/Controllers/     # Controller trip, member, expense, auth, dan profil
+├── Models/               # Model Trip, Expense, Member, Settlement, dan User
+└── Services/             # Logika bisnis, termasuk perhitungan saldo trip
+
+database/
+├── migrations/           # Skema users, trips, members, expenses, dan settlements
+└── seeders/              # Data awal aplikasi
+
+resources/
+├── css/                  # Source stylesheet Tailwind
+├── js/                   # Alpine.js dan interaksi form expense
+└── views/                # Halaman Blade aplikasi
+
+routes/
+├── web.php               # Route dashboard, trip, member, dan expense
+└── auth.php              # Route autentikasi
+```
+
+## Catatan pengembangan
+
+- Akses trip dibatasi kepada user yang membuat trip.
+- Penghapusan trip akan menghapus data terkait melalui cascade delete database.
+- Skema dan model settlement sudah disiapkan untuk pencatatan pelunasan, tetapi alur route/controller dan antarmuka settlement belum tersedia pada versi saat ini.
+- Untuk perubahan skema database, buat migration baru menggunakan:
+
+```bash
+php artisan make:migration nama_migration
+```
+
+## Perintah yang sering digunakan
+
+```bash
+# Bersihkan cache aplikasi
+php artisan optimize:clear
+
+# Lihat daftar route
+php artisan route:list
+
+# Jalankan migration baru
+php artisan migrate
+
+# Reset database lalu isi ulang seeder
+php artisan migrate:fresh --seed
+
+# Format kode PHP
+vendor/bin/pint
+
+# Build asset production
+npm run build
+```
+
+## Kontribusi
+
+1. Fork repository ini.
+2. Buat branch fitur baru:
+
+   ```bash
+   git checkout -b fitur/nama-fitur
+   ```
+
+3. Pastikan test dan formatter berhasil dijalankan.
+4. Buat pull request dengan penjelasan perubahan yang jelas.
+
+## Lisensi
+
+Project ini menggunakan lisensi MIT. Lihat [LICENSE](LICENSE) jika file lisensi tersedia di repository.
